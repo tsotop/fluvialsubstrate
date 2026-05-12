@@ -1,113 +1,135 @@
 # fluvialsubstrate
 
-A robust, user-friendly workflow for fluvial substrate class estimation from orthophotos.
+Fluvial substrate classification framework based on orthophotos, with a notebook-first workflow for annotation, training, inference, and validation.
 
 Authors: Tulio Soto Parra, David Faro, Guido Zolezzi
 
-Reference: A robust, user-friendly tool for accurate fluvial substrate class estimation.
+From the paper: A robust, user-friendly tool for accurate fluvial substrate class estimation
 
-## Overview
+## Description
 
-This project provides an end-to-end pipeline to:
+fluvialsubstrate is an end-to-end computational workflow to estimate river substrate classes from orthophotos.
 
-- Build annotation samples for training.
-- Extract spectral and texture features from orthophotos.
-- Train a classifier (RandomForest, XGBoost, or LightGBM).
-- Generate classified substrate maps.
-- Create validation samples and compute final accuracy metrics.
+The framework combines:
 
-The workflow is designed for reproducibility and GIS interoperability through GeoPackage and GeoTIFF outputs.
+- GIS-assisted polygon annotation
+- Block-based spectral and texture feature extraction
+- Supervised machine learning classification
+- Stratified validation sampling and accuracy assessment
+
+It is designed to be practical for research and operational mapping, using interoperable geospatial formats (GeoPackage, GeoTIFF) and a single main notebook pipeline.
+
+## Features
+
+- Notebook-first workflow: one main notebook for the full pipeline.
+- Model flexibility: RandomForest, XGBoost, and LightGBM support.
+- ROI-aware processing: optional ROI layer constrains extraction, inference, and validation.
+- GIS-ready outputs: annotation, map, and validation products in standard formats.
+- Reproducible setup: requirements file and clear folder structure.
+
+## Project structure
+
+```text
+fluvialsubstrate/
+|
+|-- substrate.ipynb              # Main notebook pipeline (Steps 1-8)
+|-- README.md                    # Project overview
+|-- USAGE.md                     # Detailed usage guide
+|-- requirements.txt             # Python dependencies
+|-- .gitignore
+|
+|-- src/                         # Core pipeline modules
+|   |-- annotation.py
+|   |-- features.py
+|   |-- feature_extractor_masterv2.py
+|   |-- modeling.py
+|   |-- inference.py
+|   |-- validation.py
+|   |-- roi_utils.py
+|   |-- ml_utils.py
+|   `-- plotting.py
+|
+|-- data/                        # Input data (local)
+|-- configs/                     # Optional config files
+`-- outputs/                     # Generated artifacts (local)
+```
+
+## Installation
+
+This project is developed for Python 3.10+.
+
+```bash
+cd /Users/tsotop/Unitn/Substrate/final/Jupyter
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+## Usage
+
+Run the workflow through [substrate.ipynb](substrate.ipynb):
+
+1. Install packages
+2. Configure paths and parameters
+3. Generate annotation sample
+4. Extract features
+5. Train model
+6. Classify map
+7. Generate validation set
+8. Compute final accuracy
+
+For detailed step-by-step instructions, see [USAGE.md](USAGE.md).
+
+## Configuration
+
+Configuration is notebook-based (Step 2 in [substrate.ipynb](substrate.ipynb)).
+
+Main sections:
+
+- paths: orthophoto, labels, outputs
+- features: block size, tile size, feature families
+- model: model type, class weighting, feature selection settings
+- validation: sample size and confidence settings
 
 ## Optional ROI workflow
 
-Step 3 generates a GeoPackage with three layers:
+Step 3 creates a GeoPackage with:
 
 - points
 - annotations
 - roi
 
-The roi layer is optional.
+ROI behavior:
 
-- If roi contains one or more polygons, downstream steps run only inside ROI.
-- If roi is empty, the full orthophoto domain is used.
+- If roi contains polygons, downstream processing is restricted to ROI.
+- If roi is empty, the full domain is processed.
 
-ROI filtering is applied in:
+ROI is applied in:
 
-- Feature extraction
-- Map inference
-- Validation sample generation
-
-## Project structure
-
-- substrate.ipynb: Main notebook pipeline (Steps 1-8).
-- src/: Core Python modules.
-- data/: Inputs (orthophoto, annotation GeoPackage).
-- outputs/: Models, maps, and validation artifacts.
-- requirements.txt: Python dependencies.
-
-## Quick start
-
-1. Create and activate a Python environment.
-2. Install dependencies.
-3. Open substrate.ipynb.
-4. Run steps sequentially.
-
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-## Notebook pipeline
-
-1. Install Required Packages
-2. Configuration
-3. Generate Annotation Sample
-4. Extract Features
-5. Fit Model
-6. Classify Map
-7. Generate Validation Set
-8. Final Validation
+- feature extraction
+- map inference
+- validation sample generation
 
 ## Validation outputs
 
-Step 7 writes two files in outputs/validation:
+Step 7 writes two files under outputs/validation:
 
-- validation_true_annotations.gpkg: for manual true labels.
-- validation_modeled.gpkg: modeled labels and stratum metadata.
+- validation_true_annotations.gpkg
+- validation_modeled.gpkg
 
-Step 8 reads both files to compute accuracy metrics.
+Step 8 reads both files to compute design-based and standard classification metrics.
 
-## GitHub setup for fluvialsubstrate
+## GitHub setup
 
-From this folder, initialize and push the repository:
+Create an empty GitHub repository named fluvialsubstrate, then run:
 
 ```bash
 cd /Users/tsotop/Unitn/Substrate/final/Jupyter
-git init
-git branch -M main
-git add .
-git commit -m "Initial commit: fluvialsubstrate pipeline"
-```
-
-Create a new empty GitHub repository named fluvialsubstrate, then connect and push:
-
-```bash
 git remote add origin https://github.com/<your-username>/fluvialsubstrate.git
 git push -u origin main
 ```
 
-If you use GitHub CLI:
-
-```bash
-gh repo create fluvialsubstrate --public --source=. --remote=origin --push
-```
-
 ## Notes
 
-- Large rasters and generated outputs should not be committed.
-- Use the provided .gitignore to keep the repository clean.
-
-## Usage guide
-
-For step-by-step execution details, see [USAGE.md](USAGE.md).
+- Large data and outputs are intentionally ignored by .gitignore.
+- Keep data and outputs local; version source code, notebook, and docs.

@@ -1,15 +1,13 @@
-# fluvialsubstrate Usage Instructions
+# fluvialsubstrate - Usage Instructions
 
-This document explains how to run the full workflow in [substrate.ipynb](substrate.ipynb).
+This guide explains how to execute the notebook workflow in [substrate.ipynb](substrate.ipynb).
 
 ## 1. Prerequisites
 
-- Python 3.10+ recommended
-- QGIS (for annotation and validation labeling)
+- Python 3.10+
+- QGIS (recommended for annotation and validation labeling)
 
 ## 2. Environment setup
-
-From the project root:
 
 ```bash
 cd /Users/tsotop/Unitn/Substrate/final/Jupyter
@@ -18,62 +16,73 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## 3. Input data
+## 3. Prepare inputs
 
-Expected files:
+Provide:
 
-- Orthophoto raster at [data/orthophoto.tif](data/orthophoto.tif)
-- Annotation GeoPackage path configured as `data/sampling_data.gpkg`
+- Orthophoto GeoTIFF (default: [data/orthophoto.tif](data/orthophoto.tif))
+- Annotation GeoPackage path (default: `data/sampling_data.gpkg`)
 
-You can edit paths in Step 2 of [substrate.ipynb](substrate.ipynb).
+All paths are defined in Step 2 of [substrate.ipynb](substrate.ipynb).
 
-## 4. Run the notebook
+## 4. Run the notebook sequentially
 
-Open [substrate.ipynb](substrate.ipynb) and run steps in order.
+Execute all steps from top to bottom.
 
-### Step 3: Annotation sample and optional ROI
+1. Install dependencies
+2. Configure paths and parameters
+3. Generate annotation sample
+4. Extract features
+5. Train model
+6. Classify map
+7. Generate validation samples
+8. Compute final accuracy
 
-Step 3 creates `sampling_data.gpkg` with these layers:
+## 5. Step 3 details: annotations and ROI
 
-- `points`: reference points for manual annotation
-- `annotations`: polygon labels used for training (`substrate` field)
-- `roi`: optional ROI polygons
+Step 3 creates a GeoPackage with:
 
-ROI behavior:
+- points
+- annotations
+- roi
 
-- If `roi` contains polygons, downstream processing is restricted to ROI.
-- If `roi` is empty, processing runs on the full domain.
+How to use:
 
-## 5. Training and inference outputs
+- Fill `annotations` with substrate polygons.
+- Optionally draw ROI polygons in `roi`.
 
-After Steps 4 to 6, key outputs are created under [outputs](outputs):
+Behavior:
 
-- [outputs/features](outputs/features): extracted features
-- [outputs/models](outputs/models): trained model + feature list + class mapping
-- [outputs/maps/classified_map.tif](outputs/maps/classified_map.tif): classified map
+- ROI not empty: downstream processing runs only inside ROI.
+- ROI empty: full-domain processing.
 
-## 6. Validation workflow
+## 6. Outputs by stage
 
-Step 7 generates two validation files in [outputs/validation](outputs/validation):
+Training and inference outputs:
+
+- [outputs/features](outputs/features): extracted block features
+- [outputs/models](outputs/models): model artifacts and class mapping
+- [outputs/maps](outputs/maps): classified raster products
+
+Validation outputs (Step 7):
 
 - [outputs/validation/validation_true_annotations.gpkg](outputs/validation/validation_true_annotations.gpkg)
 - [outputs/validation/validation_modeled.gpkg](outputs/validation/validation_modeled.gpkg)
 
-How to use them:
+## 7. Validation workflow in QGIS
 
-1. Open `validation_true_annotations.gpkg` in QGIS.
-2. Fill `true_label` for each sample polygon.
+1. Open `validation_true_annotations.gpkg`.
+2. Populate the `true_label` field for each polygon.
 3. Keep `validation_modeled.gpkg` unchanged.
-4. Run Step 8 to compute metrics.
+4. Run Step 8 in the notebook.
 
-## 7. Common checks
+## 8. Troubleshooting
 
-- No training polygons: verify `annotations` has valid substrate labels.
-- Empty ROI effect: if ROI is empty, full-domain behavior is expected.
-- No validation samples: verify classified map exists and ROI overlaps mapped area.
+- No extracted samples: verify `annotations` contains valid polygons and labels.
+- Empty map output inside ROI: verify ROI overlaps the orthophoto domain.
+- No validation samples: verify Step 6 produced a valid classified map.
 
-## 8. Reproducibility tips
+## 9. Good practice
 
-- Keep `configs/default.yaml` and notebook config aligned.
-- Commit code/config changes before rerunning full pipelines.
-- Avoid committing local data and generated outputs; `.gitignore` already excludes them.
+- Commit code/notebook/docs frequently.
+- Keep data and outputs local; do not version large generated artifacts.
