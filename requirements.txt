@@ -1,0 +1,17 @@
+geopandas
+numpy
+shapely
+rasterio
+pandas
+fuzzywuzzy
+scikit-learn
+matplotlib
+seaborn
+joblib
+scikit-image
+tqdm
+xgboost
+lightgbm
+python-Levenshtein
+pyyaml
+fiona

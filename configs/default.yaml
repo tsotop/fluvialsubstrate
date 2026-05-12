@@ -1,0 +1,34 @@
+# Substrate Classification Configuration
+
+# Paths
+paths:
+  orthophoto: "data/Brenta/orthophoto.tif"
+  labels_gpkg: "sampling_data.gpkg"
+  labels_layer: "annotations"
+  output_dir: "outputs"
+  models_dir: "outputs/models"
+  features_dir: "outputs/features"
+  maps_dir: "outputs/maps"
+  validation_dir: "outputs/validation"
+
+# Feature Extraction
+features:
+  block_size: 50
+  tile_size: 1000
+  use_spectral: true
+  use_glcm: true
+  use_lbp: true
+
+# Modeling
+model:
+  type: "RandomForest" # Options: RandomForest, XGBoost, LightGBM
+  use_class_weighting: true
+  corr_threshold: 0.8
+  final_feature_count: 15
+  n_splits_cv: 3
+
+# Validation
+validation:
+  total_samples: 150
+  min_samples_per_class: 20
+  confidence_level: 0.95

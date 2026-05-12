@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Logs and temp
+*.log
+*.tmp
+
+# Project outputs
+outputs/
+data/
+
+# Large or local data artifacts
+data/orthophoto.tif
+*.tif
+*.tiff
+*.gpkg
+*.joblib
+*.pth
+*.keras
+
+# Keep source-controlled sample/config folders only
+!configs/
+!src/
+!substrate.ipynb
+!requirements.txt
+!README.md
