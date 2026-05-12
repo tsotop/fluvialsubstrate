@@ -107,3 +107,7 @@ gh repo create fluvialsubstrate --public --source=. --remote=origin --push
 
 - Large rasters and generated outputs should not be committed.
 - Use the provided .gitignore to keep the repository clean.
+
+## Usage guide
+
+For step-by-step execution details, see [USAGE.md](USAGE.md).
