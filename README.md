@@ -59,7 +59,8 @@ fluvialsubstrate/
 This project is developed for Python 3.10+.
 
 ```bash
-cd /Users/tsotop/Unitn/Substrate/final/Jupyter
+git clone https://github.com/<your-username>/fluvialsubstrate.git
+cd fluvialsubstrate
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -124,7 +125,7 @@ Step 8 reads both files to compute design-based and standard classification metr
 Create an empty GitHub repository named fluvialsubstrate, then run:
 
 ```bash
-cd /Users/tsotop/Unitn/Substrate/final/Jupyter
+cd fluvialsubstrate
 git remote add origin https://github.com/<your-username>/fluvialsubstrate.git
 git push -u origin main
 ```
