@@ -4,7 +4,9 @@ Fluvial substrate classification framework based on orthophotos, with a notebook
 
 Authors: Tulio Soto Parra, David Faro, Guido Zolezzi
 
-From the paper: A robust, user-friendly tool for accurate fluvial substrate class estimation
+From the paper: A Scalable Open-Source Workflow for Riverbed Substrate Classification Using UAV Imagery
+Now as preprint! https://doi.org/10.20944/preprints202605.1410.v1
+
 
 ## Description
 
