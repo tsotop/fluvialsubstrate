@@ -59,14 +59,19 @@ fluvialsubstrate/
 
 ## Installation
 
-This project is developed for Python 3.10+. We use conda to create a dedicated environment:
+This project requires Python 3.10 or later. We recommend using Conda to create and manage the project environment.
 
 ```bash
 git clone https://github.com/tsotop/fluvialsubstrate.git
 cd fluvialsubstrate
-conda create -n fluvialsubstrate python=3.11
+
+conda env create -f environment.yml
 conda activate fluvialsubstrate
-pip install -r requirements.txt
+```
+To launch Jupyter Lab:
+
+```bash
+jupyter lab
 ```
 
 ## Usage
