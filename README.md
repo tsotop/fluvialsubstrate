@@ -129,7 +129,7 @@ Create an empty GitHub repository named fluvialsubstrate, then run:
 
 ```bash
 cd fluvialsubstrate
-git remote add origin https://github.com/<your-username>/fluvialsubstrate.git
+git remote add origin https://github.com/tsotop/fluvialsubstrate.git
 git push -u origin main
 ```
 
