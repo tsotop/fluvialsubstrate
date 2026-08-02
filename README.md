@@ -59,13 +59,13 @@ fluvialsubstrate/
 
 ## Installation
 
-This project is developed for Python 3.10+.
+This project is developed for Python 3.10+. We use conda to create a dedicated environment:
 
 ```bash
 git clone https://github.com/tsotop/fluvialsubstrate.git
 cd fluvialsubstrate
-python -m venv .venv
-source .venv/bin/activate
+conda create -n fluvialsubstrate python=3.11
+conda activate fluvialsubstrate
 pip install -r requirements.txt
 ```
 
