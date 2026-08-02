@@ -1,0 +1,24 @@
+name: fluvialsubstrate
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - geopandas
+  - numpy
+  - shapely
+  - rasterio
+  - pandas
+  - fuzzywuzzy
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - joblib
+  - scikit-image
+  - tqdm
+  - xgboost
+  - lightgbm
+  - python-levenshtein
+  - pyyaml
+  - fiona
+  - jupyterlab
+  - ipykernel
