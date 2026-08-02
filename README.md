@@ -62,7 +62,7 @@ fluvialsubstrate/
 This project is developed for Python 3.10+.
 
 ```bash
-git clone https://github.com/<your-username>/fluvialsubstrate.git
+git clone https://github.com/tsotop/fluvialsubstrate.git
 cd fluvialsubstrate
 python -m venv .venv
 source .venv/bin/activate
