@@ -122,18 +122,3 @@ Step 7 writes two files under outputs/validation:
 - validation_modeled.gpkg
 
 Step 8 reads both files to compute design-based and standard classification metrics.
-
-## GitHub setup
-
-Create an empty GitHub repository named fluvialsubstrate, then run:
-
-```bash
-cd fluvialsubstrate
-git remote add origin https://github.com/tsotop/fluvialsubstrate.git
-git push -u origin main
-```
-
-## Notes
-
-- Large data and outputs are intentionally ignored by .gitignore.
-- Keep data and outputs local; version source code, notebook, and docs.
