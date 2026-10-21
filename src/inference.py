@@ -1,5 +1,6 @@
 import os
 import json
+import atexit
 from concurrent.futures import ProcessPoolExecutor
 import joblib
 import rasterio
@@ -60,9 +61,19 @@ GDAL_CACHE_MB = 64
 _worker = {}
 
 
+def _close_worker():
+    """Closes the worker's dataset and GDAL environment before the process exits."""
+    if 'src' in _worker:
+        _worker.pop('src').close()
+    if 'env' in _worker:
+        _worker.pop('env').__exit__(None, None, None)
+
+
 def _init_worker(ortho_path, model_path, features, n_classes, block_size, chunk_cols, in_worker=True):
     if in_worker:
-        rasterio.Env(GDAL_CACHEMAX=GDAL_CACHE_MB).__enter__()   # lives as long as the worker process
+        _worker['env'] = rasterio.Env(GDAL_CACHEMAX=GDAL_CACHE_MB)   # lives as long as the worker process
+        _worker['env'].__enter__()
+        atexit.register(_close_worker)
     model = joblib.load(model_path)
     if hasattr(model, 'n_jobs'):
         model.n_jobs = 1                       # parallelism comes from the band workers
@@ -166,7 +177,7 @@ def run_inference(ortho_path, model_path, feat_path, class_map_path, output_rast
             if pool is not None:
                 pool.shutdown()
             else:
-                _worker['src'].close()
+                _close_worker()
 
     profile = {
         'driver': 'GTiff',
