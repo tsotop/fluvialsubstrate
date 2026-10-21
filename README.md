@@ -6,8 +6,8 @@ design-based validation.
 
 Authors: Tulio Soto Parra, David Farò, Guido Zolezzi
 
-Paper: *A Scalable Open Source Workflow for Riverbed Substrate Classification Using UAV Imagery*,
-Remote Sensing 2026, 18, 2529. https://doi.org/10.3390/rs18152529
+Paper: [*A Scalable Open Source Workflow for Riverbed Substrate Classification Using UAV Imagery*](https://www.mdpi.com/2072-4292/18/15/2529),
+Remote Sensing 2026, 18, 2529 (open access).
 
 ## What it does
 
@@ -94,7 +94,7 @@ The full step-by-step guide, including the QGIS parts, is in [USAGE.md](USAGE.md
 ```text
 fluvialsubstrate/
 |-- substrate.ipynb       # The workflow (Steps 1-9)
-|-- README.md, USAGE.md, CHANGELOG.md
+|-- README.md, USAGE.md, CHANGELOG.md, LICENSE
 |-- requirements.txt      # pip dependencies
 |-- environment.yml       # conda environment
 |-- configs/default.yaml  # Default settings (also set in notebook Step 2)
@@ -120,3 +120,7 @@ If you use this workflow, please cite:
 
 > Soto Parra, T.; Farò, D.; Zolezzi, G. A Scalable Open Source Workflow for Riverbed Substrate
 > Classification Using UAV Imagery. *Remote Sens.* **2026**, *18*, 2529. https://doi.org/10.3390/rs18152529
+
+## License
+
+MIT License, see [LICENSE](LICENSE).

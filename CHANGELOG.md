@@ -2,7 +2,9 @@
 
 ## 2.0.0 — 2026-10-21
 
-Compared with the version used in the paper (Soto Parra, Farò & Zolezzi 2026, *Remote Sensing* 18, 2529).
+Compared with the version used in the [paper](https://www.mdpi.com/2072-4292/18/15/2529) (Soto Parra, Farò & Zolezzi 2026, *Remote Sensing* 18, 2529; tag `v1.0.0`).
+
+- Released under the MIT License.
 
 ### Fixed
 - Training blocks at polygon edges were padded with black pixels; blocks now sit on the map grid
