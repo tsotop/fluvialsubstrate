@@ -1,129 +1,126 @@
 # fluvialsubstrate
 
-Fluvial substrate classification framework based on orthophotos, with a notebook-first workflow for annotation, training, inference, and validation.
+Riverbed substrate classification from UAV RGB orthophotos: annotate a few polygons in QGIS, train a
+Random Forest on colour and texture features, map the whole reach, and assess the map with
+design-based validation.
 
-Authors: Tulio Soto Parra, David Faro, Guido Zolezzi
+Authors: Tulio Soto Parra, David Farò, Guido Zolezzi
 
-From the paper: A Scalable Open-Source Workflow for Riverbed Substrate Classification Using UAV Imagery
+Paper: [*A Scalable Open Source Workflow for Riverbed Substrate Classification Using UAV Imagery*](https://www.mdpi.com/2072-4292/18/15/2529),
+Remote Sensing 2026, 18, 2529 (open access).
 
-Now as preprint! https://doi.org/10.20944/preprints202605.1410.v1
+## What it does
 
+1. **Annotate**: draw polygons of homogeneous substrate (e.g. `dry-sand`, `wet-cobble`) on the orthophoto in QGIS.
+2. **Train**: the orthophoto is divided into square blocks (default 50 px); colour and texture features of
+   the blocks inside your polygons train a Random Forest, evaluated with spatial cross-validation.
+3. **Map**: every block of the orthophoto is classified; a confidence map shows where the model is unsure.
+4. **Validate**: a random sample of map blocks is labelled blind in QGIS, giving unbiased accuracies and class
+   areas with confidence intervals.
+5. **Improve**: a diagnostics report says which classes need more or better polygons and where to annotate next.
 
-## Description
+Everything runs from one notebook, [substrate.ipynb](substrate.ipynb), on a normal laptop (no GPU).
+See [CHANGELOG.md](CHANGELOG.md) for the changes since the paper.
 
-fluvialsubstrate is an end-to-end computational workflow to estimate river substrate classes from orthophotos.
+## Installation
 
-The framework combines:
+You need [Git](https://git-scm.com/downloads), Python 3.10–3.12 and [QGIS](https://qgis.org) (for drawing
+polygons and labelling validation samples). Choose **one** of the two options below.
 
-- GIS-assisted polygon annotation
-- Block-based spectral and texture feature extraction
-- Supervised machine learning classification
-- Stratified validation sampling and accuracy assessment
+### Option A: conda (recommended, same on Windows, macOS and Linux)
 
-It is designed to be practical for research and operational mapping, using interoperable geospatial formats (GeoPackage, GeoTIFF) and a single main notebook pipeline.
+Install [Miniforge](https://github.com/conda-forge/miniforge) (or Anaconda/Miniconda), then open a terminal
+(Windows: *Miniforge Prompt*):
 
-## Features
+```bash
+git clone https://github.com/tsotop/fluvialsubstrate.git
+cd fluvialsubstrate
+conda env create -f environment.yml
+conda activate fluvialsubstrate
+```
 
-- Notebook-first workflow: one main notebook for the full pipeline.
-- Model flexibility: RandomForest, XGBoost, and LightGBM support.
-- ROI-aware processing: optional ROI layer constrains extraction, inference, and validation.
-- GIS-ready outputs: annotation, map, and validation products in standard formats.
-- Reproducible setup: requirements file and clear folder structure.
+### Option B: pip with a virtual environment
+
+macOS / Linux (Terminal):
+
+```bash
+git clone https://github.com/tsotop/fluvialsubstrate.git
+cd fluvialsubstrate
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+Windows (PowerShell; Python from [python.org](https://www.python.org/downloads/windows/)):
+
+```powershell
+git clone https://github.com/tsotop/fluvialsubstrate.git
+cd fluvialsubstrate
+py -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+If PowerShell refuses to run the activation script, run
+`Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, or use `.venv\Scripts\activate.bat` in the
+Command Prompt.
+
+### Check the installation
+
+```bash
+python -m unittest discover tests
+```
+
+All tests should pass (`OK`).
+
+## Quick start
+
+```bash
+jupyter lab substrate.ipynb
+```
+
+(or open the notebook in VS Code and select the `fluvialsubstrate` / `.venv` interpreter). Then:
+
+1. Copy your orthophoto to `data/orthophoto.tif` (or set its path in Step 2).
+2. Run the notebook from top to bottom; it pauses naturally at the two QGIS steps (drawing polygons
+   after Step 3, labelling validation samples after Step 7).
+
+The full step-by-step guide, including the QGIS parts, is in [USAGE.md](USAGE.md).
 
 ## Project structure
 
 ```text
 fluvialsubstrate/
-|
-|-- substrate.ipynb              # Main notebook pipeline (Steps 1-8)
-|-- README.md                    # Project overview
-|-- USAGE.md                     # Detailed usage guide
-|-- requirements.txt             # Python dependencies
-|-- .gitignore
-|
-|-- src/                         # Core pipeline modules
-|   |-- annotation.py
-|   |-- features.py
-|   |-- feature_extractor_masterv2.py
-|   |-- modeling.py
-|   |-- inference.py
-|   |-- validation.py
-|   |-- roi_utils.py
-|   |-- ml_utils.py
-|   `-- plotting.py
-|
-|-- data/                        # Input data (local)
-|-- configs/                     # Optional config files
-`-- outputs/                     # Generated artifacts (local)
+|-- substrate.ipynb       # The workflow (Steps 1-9)
+|-- README.md, USAGE.md, CHANGELOG.md, LICENSE
+|-- requirements.txt      # pip dependencies
+|-- environment.yml       # conda environment
+|-- configs/default.yaml  # Default settings (also set in notebook Step 2)
+|-- src/                  # Workflow code
+|   |-- annotation.py     # Seed points and annotation GeoPackage
+|   |-- block_features.py # Block grid and colour/texture features
+|   |-- features.py       # Training data from the annotation polygons
+|   |-- modeling.py       # Feature selection, cross-validation, final model
+|   |-- inference.py      # Full-map classification
+|   |-- postprocess.py    # Class map, confidence, edge filling
+|   |-- validation.py     # Validation sample and accuracy/area report
+|   |-- diagnostics.py    # Tips to improve the model
+|   `-- ml_utils.py, roi_utils.py, plotting.py
+|-- tests/                # Automated tests
+|-- benchmarks/           # Benchmark on the study rivers (for development)
+|-- data/                 # Your input data (not versioned)
+`-- outputs/              # Results (not versioned)
 ```
 
-## Installation
+## Citation
 
-This project requires Python 3.10 or later. We recommend using Conda to create and manage the project environment.
+If you use this workflow, please cite:
 
-```bash
-git clone https://github.com/tsotop/fluvialsubstrate.git
-cd fluvialsubstrate
+> Soto Parra, T.; Farò, D.; Zolezzi, G. A Scalable Open Source Workflow for Riverbed Substrate
+> Classification Using UAV Imagery. *Remote Sens.* **2026**, *18*, 2529. https://doi.org/10.3390/rs18152529
 
-conda env create -f environment.yml
-conda activate fluvialsubstrate
-```
-To launch Jupyter Lab:
+## License
 
-```bash
-jupyter lab
-```
-
-## Usage
-
-Run the workflow through [substrate.ipynb](substrate.ipynb):
-
-1. Install packages
-2. Configure paths and parameters
-3. Generate annotation sample
-4. Extract features
-5. Train model
-6. Classify map
-7. Generate validation set
-8. Compute final accuracy
-
-For detailed step-by-step instructions, see [USAGE.md](USAGE.md).
-
-## Configuration
-
-Configuration is notebook-based (Step 2 in [substrate.ipynb](substrate.ipynb)).
-
-Main sections:
-
-- paths: orthophoto, labels, outputs
-- features: block size, tile size, feature families
-- model: model type, class weighting, feature selection settings
-- validation: sample size and confidence settings
-
-## Optional ROI workflow
-
-Step 3 creates a GeoPackage with:
-
-- points
-- annotations
-- roi
-
-ROI behavior:
-
-- If roi contains polygons, downstream processing is restricted to ROI.
-- If roi is empty, the full domain is processed.
-
-ROI is applied in:
-
-- feature extraction
-- map inference
-- validation sample generation
-
-## Validation outputs
-
-Step 7 writes two files under outputs/validation:
-
-- validation_true_annotations.gpkg
-- validation_modeled.gpkg
-
-Step 8 reads both files to compute design-based and standard classification metrics.
+MIT License, see [LICENSE](LICENSE).
