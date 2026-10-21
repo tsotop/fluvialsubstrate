@@ -1,6 +1,7 @@
 import os
 
 import geopandas as gpd
+import pyogrio
 from rasterio.features import rasterize
 
 
@@ -10,19 +11,21 @@ def load_optional_roi(roi_path, layer_name=None, target_crs=None):
 
     try:
         if layer_name:
+            # A missing ROI layer means "no ROI"; never fall back to another layer
+            # (e.g. the sampling points) of the same GeoPackage.
+            if layer_name not in pyogrio.list_layers(roi_path)[:, 0]:
+                return None
             roi_gdf = gpd.read_file(roi_path, layer=layer_name)
         else:
             roi_gdf = gpd.read_file(roi_path)
     except Exception:
-        try:
-            roi_gdf = gpd.read_file(roi_path)
-        except Exception:
-            return None
+        return None
 
     if roi_gdf.empty or 'geometry' not in roi_gdf.columns:
         return None
 
     roi_gdf = roi_gdf[roi_gdf.geometry.notnull() & ~roi_gdf.geometry.is_empty].copy()
+    roi_gdf = roi_gdf[roi_gdf.geom_type.isin(['Polygon', 'MultiPolygon'])]
     if roi_gdf.empty:
         return None
 

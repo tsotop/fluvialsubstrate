@@ -1,6 +1,5 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 import os
 
 def plot_importance(importance_csv, output_png, top_n=15, figsize=(10, 8)):
