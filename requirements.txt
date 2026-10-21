@@ -1,17 +1,17 @@
-geopandas
-numpy
-shapely
-rasterio
-pandas
-fuzzywuzzy
-scikit-learn
-matplotlib
-seaborn
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+scikit-learn>=1.3
+scikit-image>=0.21
+rasterio>=1.3
+geopandas>=1.0
+shapely>=2.0
+fiona>=1.9
+matplotlib>=3.7
 joblib
-scikit-image
 tqdm
-xgboost
-lightgbm
-python-Levenshtein
 pyyaml
-fiona
+jupyterlab
+# Optional, only for model types XGBoost / LightGBM:
+# xgboost
+# lightgbm
